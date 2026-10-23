@@ -7,7 +7,7 @@
     <title>Falcon | Sequence Initiation</title>
     <!-- GSAP for animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <!-- Lottie Player for the JSON animation -->
+    <!-- Lottie Player -->
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <style>
         :root {
@@ -81,51 +81,42 @@
         }
 
         /* ==========================================================================
-           3. FALCON TEXT (Using icon/Word.png texture & targeting 'O' for zoom)
+           3. FALCON TEXT (Responsive & Smooth Fade-In)
            ========================================================================== */
         #falcon-word {
-            font-size: 10rem;
+            /* Responsive font size based on screen width so it fits any device perfectly */
+            font-size: clamp(3rem, 12vw, 9rem);
             font-weight: 900;
-            letter-spacing: 10px;
+            letter-spacing: 5px;
             text-transform: uppercase;
             position: relative;
             
-            /* Target the exact center of the letter 'O' for the hyper-jump zoom */
+            /* Target the center of 'O' for zoom */
             transform-origin: 77% 50%; 
             
-            /* Updated path to point inside the 'icon' folder */
-            background-image: url('icon/Word.png');[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span)
+            background-image: url('icon/Word.png');[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)
             background-size: cover;
             background-position: center;
             color: transparent;
             -webkit-background-clip: text;
             background-clip: text;
             
+            opacity: 0; /* Starts hidden for the smooth fade-in */
             filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.4));
         }
-
-        /* Mask blocks simulating progressive building/loading */
-        .mask-block {
-            position: absolute;
-            background-color: var(--bg-dark);
-            z-index: 2;
-        }
-
-        #mask-1 { top: 0; left: 10%; width: 20%; height: 100%; }
-        #mask-2 { top: 0; left: 60%; width: 15%; height: 100%; }
-        #mask-3 { top: 0; left: 85%; width: 15%; height: 100%; }
 
         /* ==========================================================================
            4. LOTTIE ANIMATION CONTAINER (icon/download.json)
            ========================================================================== */
         #animation-container {
-            margin-top: 30px;
-            width: 120px;
-            height: 120px;
+            margin-top: 20px;
+            width: 100px;
+            height: 100px;
             z-index: 10;
             display: flex;
             justify-content: center;
             align-items: center;
+            opacity: 0; /* Starts hidden for smooth entry */
         }
     </style>
 </head>
@@ -137,19 +128,16 @@
     <!-- Preloader UI -->
     <div id="preloader">
         
-        <!-- FALCON Text (Protected from browser translation) -->
+        <!-- FALCON Text -->
         <div id="falcon-word" class="notranslate" translate="no">
             FALCON
-            <div class="mask-block" id="mask-1"></div>
-            <div class="mask-block" id="mask-2"></div>
-            <div class="mask-block" id="mask-3"></div>
         </div>
 
-        <!-- Lottie Animation Loader (Pointing to icon/download.json) -->
+        <!-- Lottie Animation Loader -->
         <div id="animation-container">
             <lottie-player 
                 id="lottie-loader"
-                src="icon/download.json[span_6](start_span)[span_7](start_span)"[span_6](end_span)[span_7](end_span)
+                src="icon/download.json[span_2](start_span)[span_3](start_span)"[span_2](end_span)[span_3](end_span)
                 background="transparent" 
                 speed="1" 
                 style="width: 100%; height: 100%;" 
@@ -161,7 +149,7 @@
 
     <script>
         const falconWord = document.getElementById('falcon-word');
-        const masks = [document.getElementById('mask-1'), document.getElementById('mask-2'), document.getElementById('mask-3')];
+        const animContainer = document.getElementById('animation-container');
         const lightSpeedBg = document.getElementById('light-speed-bg');
         
         let loadProgress = 0;
@@ -181,7 +169,16 @@
         }
         createStreaks();
 
-        // 2. Loading Logic synchronized with animation
+        // 2. Smooth entry animation on page load
+        window.onload = () => {
+            // Fade in the FALCON word and the loading icon smoothly (Classy appearance)
+            gsap.to(falconWord, { opacity: 1, duration: 1.5, ease: "power2.out" });
+            gsap.to(animContainer, { opacity: 1, duration: 1, delay: 0.5, ease: "power2.out" });
+
+            setTimeout(simulateLoading, 800); 
+        };
+
+        // 3. Loading Logic 
         function simulateLoading() {
             const interval = setInterval(() => {
                 loadProgress += Math.floor(Math.random() * 4) + 1; 
@@ -189,19 +186,9 @@
                 if (loadProgress >= 100) {
                     loadProgress = 100;
                     clearInterval(interval);
-                    updateUI(loadProgress);
-                    setTimeout(triggerHyperJump, 300); // Transition after 100%
-                } else {
-                    updateUI(loadProgress);
+                    setTimeout(triggerHyperJump, 300); 
                 }
             }, 90);
-        }
-
-        // 3. UI Update & Progressive Mask Removal based on progress
-        function updateUI(progress) {
-            if(progress > 25) gsap.to(masks[0], {height: 0, duration: 0.3});
-            if(progress > 60) gsap.to(masks[1], {height: 0, duration: 0.3});
-            if(progress > 90) gsap.to(masks[2], {height: 0, duration: 0.3});
         }
 
         // 4. Hyper-Jump: Zooming directly through the 'O' in FALCON
@@ -209,13 +196,12 @@
             const tl = gsap.timeline({
                 onComplete: () => {
                     console.log("Hyper-jump through 'O' completed successfully.");
-                    // جاهز للخطوة القادمة (توظيف Falcon.png, person.png, Crown.png)[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span)
                 }
             });
 
-            // Hide the Lottie animation
-            tl.to('#animation-container', {
-                y: 40,
+            // Hide the Lottie animation smoothly
+            tl.to(animContainer, {
+                y: 20,
                 opacity: 0,
                 duration: 0.4
             }, 0);
@@ -226,7 +212,7 @@
                 duration: 0.5
             }, 0.2);
 
-            // MASSIVE ZOOM THROUGH THE 'O' (transform-origin 77% 50%)
+            // MASSIVE ZOOM THROUGH THE 'O'
             tl.to(falconWord, {
                 scale: 70,
                 opacity: 0, 
@@ -246,11 +232,6 @@
                 });
             });
         }
-
-        // Initialize Step 1
-        window.onload = () => {
-            setTimeout(simulateLoading, 500); 
-        };
     </script>
 </body>
 </html>
