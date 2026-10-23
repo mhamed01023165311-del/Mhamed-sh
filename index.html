@@ -7,11 +7,11 @@
     <title>Falcon | Sequence Initiation</title>
     <!-- GSAP for smooth animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Lottie Player to render your download.json animation -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <style>
         :root {
             --bg-dark: #030305;
-            --falcon-red: #ff003c;
-            --falcon-blue: #00d2ff;
         }
 
         * {
@@ -20,7 +20,7 @@
             box-sizing: border-box;
         }
 
-        /* إلغاء السكرول تماماً وثبات الصفحة */
+        /* إلغاء التمرير تماماً وثبات الشاشة */
         html, body {
             width: 100%;
             height: 100vh;
@@ -37,28 +37,23 @@
             align-items: center;
         }
 
-        /* ==========================================================================
-           حاوية التحميل (سنترة كاملة في المنتصف)
-           ========================================================================== */
+        /* حاوية التحميل والتوسيط */
         #preloader {
             position: absolute;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 10;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
 
-        /* ==========================================================================
-           صورة كلمة FALCON (متسنترة تماماً ومتجاوبة)
-           ========================================================================== */
+        /* صورة كلمة FALCON متسنترة وفي المنتصف تماماً */
         #falcon-image-container {
             position: relative;
-            width: min(85vw, 550px);
+            width: min(85vw, 500px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -72,82 +67,48 @@
             filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.4));
         }
 
-        /* ==========================================================================
-           دائرة التحميل السفلية
-           ========================================================================== */
+        /* حاوية ملف الـ download.json أسفل الكلمة */
         #loader-container {
             margin-top: 30px;
-            width: 45px;
-            height: 45px;
+            width: 80px;
+            height: 80px;
             opacity: 0;
-            z-index: 10;
-        }
-
-        .spinner {
-            animation: rotate 2s linear infinite;
-            width: 100%;
-            height: 100%;
-        }
-
-        .path {
-            stroke: var(--falcon-blue);
-            stroke-linecap: round;
-            animation: dash 1.5s ease-in-out infinite;
-        }
-
-        @keyframes rotate {
-            100% { transform: rotate(360deg); }
-        }
-
-        @keyframes dash {
-            0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; }
-            50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; }
-            100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; }
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
     </style>
 </head>
 <body>
 
-    <!-- عناصر التحميل متسنترة بالكامل -->
     <div id="preloader">
+        <!-- صورة كلمة فالكون -->
         <div id="falcon-image-container">
-            <img src="icon/Word.png" alt="Falcon" class="notranslate" translate="no">[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)
+            <img src="icon/Word.png" alt="Falcon" class="notranslate" translate="no">
         </div>
 
+        <!-- ملف الأنيميشن الخاص بك (download.json) -->
         <div id="loader-container">
-            <svg class="spinner" viewBox="0 0 50 50">
-                <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
-            </svg>
+            <lottie-player 
+                src="icon/download.json"
+                background="transparent" 
+                speed="1" 
+                style="width: 100%; height: 100%;" 
+                loop 
+                autoplay>
+            </lottie-player>
         </div>
     </div>
 
     <script>
         const falconContainer = document.getElementById('falcon-image-container');
         const loaderContainer = document.getElementById('loader-container');
-        
-        let loadProgress = 0;
 
-        // بداية ظهور العناصر بنعومة
+        // ظهور ناعم للعناصر عند فتح الصفحة
         window.onload = () => {
-            gsap.to(falconContainer, { opacity: 1, duration: 1.2, ease: "power2.out" });
+            gsap.to(falconContainer, { opacity: 1, duration: 1, ease: "power2.out" });
             gsap.to(loaderContainer, { opacity: 1, duration: 0.8, delay: 0.3, ease: "power2.out" });
-
-            setTimeout(simulateLoading, 600); 
         };
-
-        // محاكاة التحميل لحد 100% وتقف من غير أي زووم
-        function simulateLoading() {
-            const interval = setInterval(() => {
-                loadProgress += Math.floor(Math.random() * 5) + 2; 
-                
-                if (loadProgress >= 100) {
-                    loadProgress = 100;
-                    clearInterval(interval);
-                    console.log("Loading reached 100%. Ready.");
-                    // هتقف هنا ومش هتتحرك لأي مكان تاني
-                }
-            }, 80);
-        }
     </script>
 </body>
 </html>
