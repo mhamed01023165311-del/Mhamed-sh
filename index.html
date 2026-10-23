@@ -7,7 +7,7 @@
     <title>Falcon | Sequence Initiation</title>
     <!-- GSAP for smooth animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <!-- Lottie Player to render your download.json animation -->
+    <!-- Lottie Player to render your exact download.json animation -->
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <style>
         :root {
@@ -20,7 +20,7 @@
             box-sizing: border-box;
         }
 
-        /* إلغاء التمرير تماماً وثبات الشاشة */
+        /* إلغاء التمرير تماماً وثبات الشاشة على جميع الأجهزة */
         html, body {
             width: 100%;
             height: 100vh;
@@ -37,7 +37,7 @@
             align-items: center;
         }
 
-        /* حاوية التحميل والتوسيط */
+        /* حاوية التحميل والتوسيط في المنتصف تماماً */
         #preloader {
             position: absolute;
             top: 0;
@@ -50,14 +50,15 @@
             justify-content: center;
         }
 
-        /* صورة كلمة FALCON متسنترة وفي المنتصف تماماً */
+        /* صورة كلمة FALCON المتجاوبة */
         #falcon-image-container {
             position: relative;
-            width: min(85vw, 500px);
+            width: min(85vw, 480px);
             display: flex;
             justify-content: center;
             align-items: center;
             opacity: 0;
+            margin-bottom: 20px;
         }
 
         #falcon-image-container img {
@@ -67,11 +68,10 @@
             filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.4));
         }
 
-        /* حاوية ملف الـ download.json أسفل الكلمة */
-        #loader-container {
-            margin-top: 30px;
-            width: 80px;
-            height: 80px;
+        /* حاوية ملف الـ download.json (التقويم المتحرك والعداد 1-100) */
+        #lottie-container {
+            width: clamp(150px, 35vw, 220px);
+            height: clamp(150px, 35vw, 220px);
             opacity: 0;
             display: flex;
             justify-content: center;
@@ -82,13 +82,13 @@
 <body>
 
     <div id="preloader">
-        <!-- صورة كلمة فالكون -->
+        <!-- صورة كلمة فالكون (Word.png) الشفافة والمفرغة -->
         <div id="falcon-image-container">
             <img src="icon/Word.png" alt="Falcon" class="notranslate" translate="no">
         </div>
 
-        <!-- ملف الأنيميشن الخاص بك (download.json) -->
-        <div id="loader-container">
+        <!-- كارت التقويم الحقيقي المتحرك (download.json) -->
+        <div id="lottie-container">
             <lottie-player 
                 src="icon/download.json"
                 background="transparent" 
@@ -102,12 +102,12 @@
 
     <script>
         const falconContainer = document.getElementById('falcon-image-container');
-        const loaderContainer = document.getElementById('loader-container');
+        const lottieContainer = document.getElementById('lottie-container');
 
-        // ظهور ناعم للعناصر عند فتح الصفحة
+        // ظهور ناعم واحترافي للعناصر عند فتح الصفحة
         window.onload = () => {
             gsap.to(falconContainer, { opacity: 1, duration: 1, ease: "power2.out" });
-            gsap.to(loaderContainer, { opacity: 1, duration: 0.8, delay: 0.3, ease: "power2.out" });
+            gsap.to(lottieContainer, { opacity: 1, duration: 0.8, delay: 0.3, ease: "power2.out" });
         };
     </script>
 </body>
