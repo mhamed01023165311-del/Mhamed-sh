@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>Falcon | Sequence Initiation</title>
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- Lottie Player for the JSON animation -->
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <style>
+        :root {
+            --bg-dark: #030305;
+            --falcon-red: #ff003c;
+            --falcon-blue: #00d2ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #fff;
+            font-family: 'Arial Black', Impact, sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+
+        /* ==========================================================================
+           1. SPEED OF LIGHT BACKGROUND 
+           ========================================================================== */
+        #light-speed-bg {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            z-index: 1;
+            opacity: 0;
+            background-color: var(--bg-dark);
+            transform: rotate(-45deg);
+            pointer-events: none;
+        }
+
+        .streak {
+            position: absolute;
+            width: 150px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--falcon-blue), transparent);
+            border-radius: 50%;
+            filter: blur(1px);
+            opacity: 0;
+        }
+
+        .streak.red {
+            background: linear-gradient(90deg, transparent, var(--falcon-red), transparent);
+            height: 6px;
+            filter: blur(2px);
+        }
+
+        /* ==========================================================================
+           2. PRELOADER CONTAINER
+           ========================================================================== */
+        #preloader {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* ==========================================================================
+           3. FALCON TEXT (Using icon/Word.png texture & targeting 'O' for zoom)
+           ========================================================================== */
+        #falcon-word {
+            font-size: 10rem;
+            font-weight: 900;
+            letter-spacing: 10px;
+            text-transform: uppercase;
+            position: relative;
+            
+            /* Target the exact center of the letter 'O' for the hyper-jump zoom */
+            transform-origin: 77% 50%; 
+            
+            /* Updated path to point inside the 'icon' folder */
+            background-image: url('icon/Word.png');[span_4](start_span)[span_4](end_span)[span_5](start_span)[span_5](end_span)
+            background-size: cover;
+            background-position: center;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            
+            filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.4));
+        }
+
+        /* Mask blocks simulating progressive building/loading */
+        .mask-block {
+            position: absolute;
+            background-color: var(--bg-dark);
+            z-index: 2;
+        }
+
+        #mask-1 { top: 0; left: 10%; width: 20%; height: 100%; }
+        #mask-2 { top: 0; left: 60%; width: 15%; height: 100%; }
+        #mask-3 { top: 0; left: 85%; width: 15%; height: 100%; }
+
+        /* ==========================================================================
+           4. LOTTIE ANIMATION CONTAINER (icon/download.json)
+           ========================================================================== */
+        #animation-container {
+            margin-top: 30px;
+            width: 120px;
+            height: 120px;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Speed of Light Background Lines -->
+    <div id="light-speed-bg"></div>
+
+    <!-- Preloader UI -->
+    <div id="preloader">
+        
+        <!-- FALCON Text (Protected from browser translation) -->
+        <div id="falcon-word" class="notranslate" translate="no">
+            FALCON
+            <div class="mask-block" id="mask-1"></div>
+            <div class="mask-block" id="mask-2"></div>
+            <div class="mask-block" id="mask-3"></div>
+        </div>
+
+        <!-- Lottie Animation Loader (Pointing to icon/download.json) -->
+        <div id="animation-container">
+            <lottie-player 
+                id="lottie-loader"
+                src="icon/download.json[span_6](start_span)[span_7](start_span)"[span_6](end_span)[span_7](end_span)
+                background="transparent" 
+                speed="1" 
+                style="width: 100%; height: 100%;" 
+                loop 
+                autoplay>
+            </lottie-player>
+        </div>
+    </div>
+
+    <script>
+        const falconWord = document.getElementById('falcon-word');
+        const masks = [document.getElementById('mask-1'), document.getElementById('mask-2'), document.getElementById('mask-3')];
+        const lightSpeedBg = document.getElementById('light-speed-bg');
+        
+        let loadProgress = 0;
+
+        // 1. Generate Speed of Light Streaks
+        function createStreaks() {
+            for(let i = 0; i < 80; i++) {
+                let streak = document.createElement('div');
+                streak.classList.add('streak');
+                if(Math.random() > 0.5) streak.classList.add('red');
+                
+                streak.style.top = Math.random() * 100 + '%';
+                streak.style.left = '-20%'; 
+                
+                lightSpeedBg.appendChild(streak);
+            }
+        }
+        createStreaks();
+
+        // 2. Loading Logic synchronized with animation
+        function simulateLoading() {
+            const interval = setInterval(() => {
+                loadProgress += Math.floor(Math.random() * 4) + 1; 
+                
+                if (loadProgress >= 100) {
+                    loadProgress = 100;
+                    clearInterval(interval);
+                    updateUI(loadProgress);
+                    setTimeout(triggerHyperJump, 300); // Transition after 100%
+                } else {
+                    updateUI(loadProgress);
+                }
+            }, 90);
+        }
+
+        // 3. UI Update & Progressive Mask Removal based on progress
+        function updateUI(progress) {
+            if(progress > 25) gsap.to(masks[0], {height: 0, duration: 0.3});
+            if(progress > 60) gsap.to(masks[1], {height: 0, duration: 0.3});
+            if(progress > 90) gsap.to(masks[2], {height: 0, duration: 0.3});
+        }
+
+        // 4. Hyper-Jump: Zooming directly through the 'O' in FALCON
+        function triggerHyperJump() {
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    console.log("Hyper-jump through 'O' completed successfully.");
+                    // جاهز للخطوة القادمة (توظيف Falcon.png, person.png, Crown.png)[span_8](start_span)[span_8](end_span)[span_9](start_span)[span_9](end_span)
+                }
+            });
+
+            // Hide the Lottie animation
+            tl.to('#animation-container', {
+                y: 40,
+                opacity: 0,
+                duration: 0.4
+            }, 0);
+
+            // Ignite background light-speed streaks
+            tl.to(lightSpeedBg, {
+                opacity: 1,
+                duration: 0.5
+            }, 0.2);
+
+            // MASSIVE ZOOM THROUGH THE 'O' (transform-origin 77% 50%)
+            tl.to(falconWord, {
+                scale: 70,
+                opacity: 0, 
+                duration: 1.5,
+                ease: "power4.in"
+            }, 0);
+
+            // Animate light streaks rushing by
+            const allStreaks = document.querySelectorAll('.streak');
+            allStreaks.forEach((streak) => {
+                gsap.to(streak, {
+                    x: window.innerWidth * 2.5,
+                    duration: Math.random() * 1.2 + 0.3,
+                    ease: "none",
+                    repeat: -1,
+                    delay: Math.random() * 1.5
+                });
+            });
+        }
+
+        // Initialize Step 1
+        window.onload = () => {
+            setTimeout(simulateLoading, 500); 
+        };
+    </script>
+</body>
+</html>
