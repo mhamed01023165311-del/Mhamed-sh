@@ -2,13 +2,11 @@
 <html lang="en" translate="no">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="google" content="notranslate">
     <title>Falcon | Sequence Initiation</title>
-    <!-- GSAP for animations -->
+    <!-- GSAP for smooth animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <!-- Lottie Player -->
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <style>
         :root {
             --bg-dark: #030305;
@@ -22,12 +20,18 @@
             box-sizing: border-box;
         }
 
-        body {
-            background-color: var(--bg-dark);
-            color: #fff;
-            font-family: 'Arial Black', Impact, sans-serif;
-            overflow: hidden;
+        /* إلغاء السكرول تماماً وثبات الصفحة على حجم الشاشة أياً كانت */
+        html, body {
+            width: 100%;
             height: 100vh;
+            background-color: var(--bg-dark);
+            overflow: hidden;
+            position: fixed;
+            touch-action: none;
+        }
+
+        body {
+            color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -81,42 +85,56 @@
         }
 
         /* ==========================================================================
-           3. FALCON TEXT (Responsive & Smooth Fade-In)
+           3. FALCON WORD IMAGE (Fully Responsive & Untouched)
            ========================================================================== */
-        #falcon-word {
-            /* Responsive font size based on screen width so it fits any device perfectly */
-            font-size: clamp(3rem, 12vw, 9rem);
-            font-weight: 900;
-            letter-spacing: 5px;
-            text-transform: uppercase;
+        #falcon-image-container {
             position: relative;
-            
-            /* Target the center of 'O' for zoom */
+            width: min(85vw, 550px); /* يتاقلم بذكاء مع الموبايل واللابتوب */
+            display: flex;
+            justify-content: center;
+            align-items: center;
             transform-origin: 77% 50%; 
-            
-            background-image: url('icon/Word.png');[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)
-            background-size: cover;
-            background-position: center;
-            color: transparent;
-            -webkit-background-clip: text;
-            background-clip: text;
-            
-            opacity: 0; /* Starts hidden for the smooth fade-in */
+            opacity: 0;
+        }
+
+        #falcon-image-container img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
             filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.4));
         }
 
         /* ==========================================================================
-           4. LOTTIE ANIMATION CONTAINER (icon/download.json)
+           4. CLEAN SVG LOADER
            ========================================================================== */
-        #animation-container {
-            margin-top: 20px;
-            width: 100px;
-            height: 100px;
+        #loader-container {
+            margin-top: 25px;
+            width: 45px;
+            height: 45px;
+            opacity: 0;
             z-index: 10;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            opacity: 0; /* Starts hidden for smooth entry */
+        }
+
+        .spinner {
+            animation: rotate 2s linear infinite;
+            width: 100%;
+            height: 100%;
+        }
+
+        .path {
+            stroke: var(--falcon-blue);
+            stroke-linecap: round;
+            animation: dash 1.5s ease-in-out infinite;
+        }
+
+        @keyframes rotate {
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes dash {
+            0% { stroke-dasharray: 1, 150; stroke-dashoffset: 0; }
+            50% { stroke-dasharray: 90, 150; stroke-dashoffset: -35; }
+            100% { stroke-dasharray: 90, 150; stroke-dashoffset: -124; }
         }
     </style>
 </head>
@@ -128,28 +146,22 @@
     <!-- Preloader UI -->
     <div id="preloader">
         
-        <!-- FALCON Text -->
-        <div id="falcon-word" class="notranslate" translate="no">
-            FALCON
+        <!-- FALCON Image (Original transparent Word.png) -->
+        <div id="falcon-image-container">
+            <img src="icon/Word.png" alt="Falcon" class="notranslate" translate="no">[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)
         </div>
 
-        <!-- Lottie Animation Loader -->
-        <div id="animation-container">
-            <lottie-player 
-                id="lottie-loader"
-                src="icon/download.json[span_2](start_span)[span_3](start_span)"[span_2](end_span)[span_3](end_span)
-                background="transparent" 
-                speed="1" 
-                style="width: 100%; height: 100%;" 
-                loop 
-                autoplay>
-            </lottie-player>
+        <!-- Loader -->
+        <div id="loader-container">
+            <svg class="spinner" viewBox="0 0 50 50">
+                <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+            </svg>
         </div>
     </div>
 
     <script>
-        const falconWord = document.getElementById('falcon-word');
-        const animContainer = document.getElementById('animation-container');
+        const falconContainer = document.getElementById('falcon-image-container');
+        const loaderContainer = document.getElementById('loader-container');
         const lightSpeedBg = document.getElementById('light-speed-bg');
         
         let loadProgress = 0;
@@ -171,36 +183,35 @@
 
         // 2. Smooth entry animation on page load
         window.onload = () => {
-            // Fade in the FALCON word and the loading icon smoothly (Classy appearance)
-            gsap.to(falconWord, { opacity: 1, duration: 1.5, ease: "power2.out" });
-            gsap.to(animContainer, { opacity: 1, duration: 1, delay: 0.5, ease: "power2.out" });
+            gsap.to(falconContainer, { opacity: 1, duration: 1.2, ease: "power2.out" });
+            gsap.to(loaderContainer, { opacity: 1, duration: 0.8, delay: 0.3, ease: "power2.out" });
 
-            setTimeout(simulateLoading, 800); 
+            setTimeout(simulateLoading, 600); 
         };
 
-        // 3. Loading Logic 
+        // 3. Loading Simulation 
         function simulateLoading() {
             const interval = setInterval(() => {
-                loadProgress += Math.floor(Math.random() * 4) + 1; 
+                loadProgress += Math.floor(Math.random() * 5) + 2; 
                 
                 if (loadProgress >= 100) {
                     loadProgress = 100;
                     clearInterval(interval);
                     setTimeout(triggerHyperJump, 300); 
                 }
-            }, 90);
+            }, 80);
         }
 
-        // 4. Hyper-Jump: Zooming directly through the 'O' in FALCON
+        // 4. Hyper-Jump: Zooming directly through the image center/O
         function triggerHyperJump() {
             const tl = gsap.timeline({
                 onComplete: () => {
-                    console.log("Hyper-jump through 'O' completed successfully.");
+                    console.log("Hyper-jump completed successfully.");
                 }
             });
 
-            // Hide the Lottie animation smoothly
-            tl.to(animContainer, {
+            // Hide the loader smoothly
+            tl.to(loaderContainer, {
                 y: 20,
                 opacity: 0,
                 duration: 0.4
@@ -212,8 +223,8 @@
                 duration: 0.5
             }, 0.2);
 
-            // MASSIVE ZOOM THROUGH THE 'O'
-            tl.to(falconWord, {
+            // MASSIVE ZOOM THROUGH THE IMAGE
+            tl.to(falconContainer, {
                 scale: 70,
                 opacity: 0, 
                 duration: 1.5,
