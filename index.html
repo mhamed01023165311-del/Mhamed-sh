@@ -20,7 +20,7 @@
             box-sizing: border-box;
         }
 
-        /* إلغاء السكرول تماماً وثبات الصفحة على حجم الشاشة أياً كانت */
+        /* إلغاء السكرول تماماً وثبات الصفحة */
         html, body {
             width: 100%;
             height: 100vh;
@@ -35,65 +35,33 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 1000px;
         }
 
         /* ==========================================================================
-           1. SPEED OF LIGHT BACKGROUND 
-           ========================================================================== */
-        #light-speed-bg {
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            z-index: 1;
-            opacity: 0;
-            background-color: var(--bg-dark);
-            transform: rotate(-45deg);
-            pointer-events: none;
-        }
-
-        .streak {
-            position: absolute;
-            width: 150px;
-            height: 4px;
-            background: linear-gradient(90deg, transparent, var(--falcon-blue), transparent);
-            border-radius: 50%;
-            filter: blur(1px);
-            opacity: 0;
-        }
-
-        .streak.red {
-            background: linear-gradient(90deg, transparent, var(--falcon-red), transparent);
-            height: 6px;
-            filter: blur(2px);
-        }
-
-        /* ==========================================================================
-           2. PRELOADER CONTAINER
+           حاوية التحميل (سنترة كاملة في المنتصف)
            ========================================================================== */
         #preloader {
-            position: relative;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             z-index: 10;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 100vw;
-            height: 100vh;
         }
 
         /* ==========================================================================
-           3. FALCON WORD IMAGE (Fully Responsive & Untouched)
+           صورة كلمة FALCON (متسنترة تماماً ومتجاوبة)
            ========================================================================== */
         #falcon-image-container {
             position: relative;
-            width: min(85vw, 550px); /* يتاقلم بذكاء مع الموبايل واللابتوب */
+            width: min(85vw, 550px);
             display: flex;
             justify-content: center;
             align-items: center;
-            transform-origin: 77% 50%; 
             opacity: 0;
         }
 
@@ -105,10 +73,10 @@
         }
 
         /* ==========================================================================
-           4. CLEAN SVG LOADER
+           دائرة التحميل السفلية
            ========================================================================== */
         #loader-container {
-            margin-top: 25px;
+            margin-top: 30px;
             width: 45px;
             height: 45px;
             opacity: 0;
@@ -140,18 +108,12 @@
 </head>
 <body>
 
-    <!-- Speed of Light Background Lines -->
-    <div id="light-speed-bg"></div>
-
-    <!-- Preloader UI -->
+    <!-- عناصر التحميل متسنترة بالكامل -->
     <div id="preloader">
-        
-        <!-- FALCON Image (Original transparent Word.png) -->
         <div id="falcon-image-container">
             <img src="icon/Word.png" alt="Falcon" class="notranslate" translate="no">[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)
         </div>
 
-        <!-- Loader -->
         <div id="loader-container">
             <svg class="spinner" viewBox="0 0 50 50">
                 <circle class="path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
@@ -162,26 +124,10 @@
     <script>
         const falconContainer = document.getElementById('falcon-image-container');
         const loaderContainer = document.getElementById('loader-container');
-        const lightSpeedBg = document.getElementById('light-speed-bg');
         
         let loadProgress = 0;
 
-        // 1. Generate Speed of Light Streaks
-        function createStreaks() {
-            for(let i = 0; i < 80; i++) {
-                let streak = document.createElement('div');
-                streak.classList.add('streak');
-                if(Math.random() > 0.5) streak.classList.add('red');
-                
-                streak.style.top = Math.random() * 100 + '%';
-                streak.style.left = '-20%'; 
-                
-                lightSpeedBg.appendChild(streak);
-            }
-        }
-        createStreaks();
-
-        // 2. Smooth entry animation on page load
+        // بداية ظهور العناصر بنعومة
         window.onload = () => {
             gsap.to(falconContainer, { opacity: 1, duration: 1.2, ease: "power2.out" });
             gsap.to(loaderContainer, { opacity: 1, duration: 0.8, delay: 0.3, ease: "power2.out" });
@@ -189,7 +135,7 @@
             setTimeout(simulateLoading, 600); 
         };
 
-        // 3. Loading Simulation 
+        // محاكاة التحميل لحد 100% وتقف من غير أي زووم
         function simulateLoading() {
             const interval = setInterval(() => {
                 loadProgress += Math.floor(Math.random() * 5) + 2; 
@@ -197,51 +143,10 @@
                 if (loadProgress >= 100) {
                     loadProgress = 100;
                     clearInterval(interval);
-                    setTimeout(triggerHyperJump, 300); 
+                    console.log("Loading reached 100%. Ready.");
+                    // هتقف هنا ومش هتتحرك لأي مكان تاني
                 }
             }, 80);
-        }
-
-        // 4. Hyper-Jump: Zooming directly through the image center/O
-        function triggerHyperJump() {
-            const tl = gsap.timeline({
-                onComplete: () => {
-                    console.log("Hyper-jump completed successfully.");
-                }
-            });
-
-            // Hide the loader smoothly
-            tl.to(loaderContainer, {
-                y: 20,
-                opacity: 0,
-                duration: 0.4
-            }, 0);
-
-            // Ignite background light-speed streaks
-            tl.to(lightSpeedBg, {
-                opacity: 1,
-                duration: 0.5
-            }, 0.2);
-
-            // MASSIVE ZOOM THROUGH THE IMAGE
-            tl.to(falconContainer, {
-                scale: 70,
-                opacity: 0, 
-                duration: 1.5,
-                ease: "power4.in"
-            }, 0);
-
-            // Animate light streaks rushing by
-            const allStreaks = document.querySelectorAll('.streak');
-            allStreaks.forEach((streak) => {
-                gsap.to(streak, {
-                    x: window.innerWidth * 2.5,
-                    duration: Math.random() * 1.2 + 0.3,
-                    ease: "none",
-                    repeat: -1,
-                    delay: Math.random() * 1.5
-                });
-            });
         }
     </script>
 </body>
