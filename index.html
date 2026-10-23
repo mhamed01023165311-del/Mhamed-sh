@@ -9,8 +9,8 @@
     <style>
         :root {
             --bg-dark: #030305;
-            --primary: #070814;
-            --secondary: #00d2ff;
+            --falcon-blue: #00d2ff;
+            --falcon-red: #ff003c;
         }
 
         * {
@@ -19,7 +19,7 @@
             box-sizing: border-box;
         }
 
-        /* إلغاء السكرول تماماً وثبات الشاشة */
+        /* إلغاء التمرير وثبات الشاشة تماماً */
         html, body {
             width: 100%;
             height: 100vh;
@@ -34,9 +34,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            font-family: 'Arial Black', Impact, sans-serif;
         }
 
-        /* التوسيط الشامل للمشهد */
+        /* الحاوية العامة في منتصف الشاشة */
         #preloader {
             position: absolute;
             top: 0;
@@ -47,12 +48,12 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 25px;
+            gap: 30px;
         }
 
         /* صورة كلمة فالكون */
         #falcon-image-container {
-            width: min(85vw, 450px);
+            width: min(85vw, 480px);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -66,96 +67,137 @@
             filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.4));
         }
 
-        /* كارت التقويم المتحرك (مبني بـ SVG و CSS لنضمن عمله الفوري) */
-        .loader-card {
-            position: relative;
-            width: 130px;
-            height: 130px;
-            transform-origin: 50% 30%;
-            animation: wiggle 2.4s cubic-bezier(.45,0,.55,1) infinite;
+        /* ==========================================================================
+           عداد التروس الميكانيكي (Rolling Gears Counter)
+           ========================================================================== */
+        #gear-counter {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(10, 12, 20, 0.85);
+            padding: 12px 20px;
+            border-radius: 12px;
+            border: 2px solid rgba(0, 210, 255, 0.3);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.15), inset 0 0 10px rgba(0, 0, 0, 0.8);
             opacity: 0;
         }
 
-        @keyframes wiggle{
-            0%  {transform:translateY(0) rotate(0deg)}
-            10% {transform:translateY(8px) rotate(-4deg)}
-            25% {transform:translateY(4px) rotate(-7deg)}
-            40% {transform:translateY(-8px) rotate(4deg)}
-            60% {transform:translateY(6px) rotate(2deg)}
-            100%{transform:translateY(0) rotate(0deg)}
+        /* شباك عرض الرقم (مخفي ما يخرج عن الإطار لتأثير التروس) */
+        .digit-drum {
+            position: relative;
+            width: 38px;
+            height: 52px;
+            overflow: hidden;
+            text-align: center;
+            background: #05070d;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .loader-card svg {
-            width: 100%;
-            height: 100%;
-            display: block;
-            overflow: visible;
-        }
-
-        /* العداد الرقمي داخل كارت التقويم */
-        .loader-number {
+        /* شريط الأرقام اللي بيتحرك فوق وتحت */
+        .drum-strip {
             position: absolute;
-            left: 50%;
-            top: 65%;
-            transform: translate(-50%, -50%);
-            font-size: 32px;
-            font-weight: 900;
-            color: var(--secondary);
-            font-family: 'Arial Black', sans-serif;
-            letter-spacing: -1px;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.1, 0.9, 0.2, 1);
         }
-        
-        .loader-number .pct {
-            font-size: 14px;
-            vertical-align: top;
-            margin-left: 2px;
+
+        .drum-num {
+            height: 52px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 34px;
+            font-weight: 900;
+            color: var(--falcon-blue);
+            text-shadow: 0 0 10px rgba(0, 210, 255, 0.6);
+        }
+
+        .percent-symbol {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--falcon-red);
+            margin-left: 6px;
+            text-shadow: 0 0 10px rgba(255, 0, 60, 0.6);
         }
     </style>
 </head>
 <body>
 
     <div id="preloader">
-        <!-- كلمة FALCON الشفافة -->
+        <!-- كلمة فالكون الشفافة -->
         <div id="falcon-image-container">
             <img src="icon/Word.png" alt="Falcon" class="notranslate" translate="no">
         </div>
 
-        <!-- كارت التقويم المتحرك مع العداد التصاعدي -->
-        <div class="loader-card" id="loaderCard">
-            <svg viewBox="0 0 430 430" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <!-- حلقات التقويم فوق -->
-                <rect x="121.2" y="88.84" width="43.7" height="38.52" stroke="#00d2ff" stroke-width="12.4"/>
-                <rect x="335.1" y="88.84" width="43.7" height="38.52" stroke="#00d2ff" stroke-width="12.4"/>
-                <!-- شريط العنوان -->
-                <rect x="89" y="127.36" width="322" height="47.13" stroke="#00d2ff" stroke-width="12.4" fill="#0d1117"/>
-                <!-- جسم الكارت -->
-                <rect x="89" y="174.49" width="322" height="236.67" stroke="#00d2ff" stroke-width="12.4" fill="#0d1117"/>
-            </svg>
-            <div class="loader-number">
-                <span id="countValue">1</span><span class="pct">%</span>
+        <!-- العداد الميكانيكي على شكل تروس (3 خانات: المئات، العشرات، الآحاد) -->
+        <div id="gear-counter">
+            <!-- خانة المئات -->
+            <div class="digit-drum" id="drum-hundreds">
+                <div class="drum-strip" style="transform: translateY(0px);">
+                    <div class="drum-num">0</div><div class="drum-num">1</div>
+                </div>
             </div>
+            <!-- خانة العشرات -->
+            <div class="digit-drum" id="drum-tens">
+                <div class="drum-strip" style="transform: translateY(0px);">
+                    <div class="drum-num">0</div><div class="drum-num">1</div><div class="drum-num">2</div><div class="drum-num">3</div><div class="drum-num">4</div><div class="drum-num">5</div><div class="drum-num">6</div><div class="drum-num">7</div><div class="drum-num">8</div><div class="drum-num">9</div>
+                </div>
+            </div>
+            <!-- خانة الآحاد -->
+            <div class="digit-drum" id="drum-units">
+                <div class="drum-strip" style="transform: translateY(0px);">
+                    <div class="drum-num">0</div><div class="drum-num">1</div><div class="drum-num">2</div><div class="drum-num">3</div><div class="drum-num">4</div><div class="drum-num">5</div><div class="drum-num">6</div><div class="drum-num">7</div><div class="drum-num">8</div><div class="drum-num">9</div>
+                </div>
+            </div>
+            <span class="percent-symbol">%</span>
         </div>
     </div>
 
     <script>
         const falconContainer = document.getElementById('falcon-image-container');
-        const loaderCard = document.getElementById('loaderCard');
-        const countValue = document.getElementById('countValue');
+        const gearCounter = document.getElementById('gear-counter');
 
-        // ظهور ناعم للعناصر
+        const drumHundreds = document.querySelector('#drum-hundreds .drum-strip');
+        const drumTens = document.querySelector('#drum-tens .drum-strip');
+        const drumUnits = document.querySelector('#drum-units .drum-strip');
+
+        // بناء شريط المئات ليحتوي من 0 إلى 1
+        drumHundreds.innerHTML = '';
+        for (let i = 0; i <= 1; i++) {
+            drumHundreds.innerHTML += `<div class="drum-num">${i}</div>`;
+        }
+
+        // تحديث حركة التروس بناءً على النسبة المئوية
+        function updateCounter(val) {
+            let strVal = val.toString().padStart(3, '0'); // مثل: 005 أو 100
+            
+            let h = parseInt(strVal[0]);
+            let t = parseInt(strVal[1]);
+            let u = parseInt(strVal[2]);
+
+            drumHundreds.style.transform = `translateY(-${h * 52}px)`;
+            drumTens.style.transform = `translateY(-${t * 52}px)`;
+            drumUnits.style.transform = `translateY(-${u * 52}px)`;
+        }
+
+        // ظهور ناعم عند فتح الصفحة
         window.onload = () => {
             gsap.to(falconContainer, { opacity: 1, duration: 1, ease: "power2.out" });
-            gsap.to(loaderCard, { opacity: 1, duration: 0.8, delay: 0.3, ease: "power2.out" });
+            gsap.to(gearCounter, { opacity: 1, duration: 0.8, delay: 0.3, ease: "power2.out" });
 
-            // عداد تصاعدي حقيقي من 1 إلى 100%
-            let currentProgress = 1;
-            const timer = setInterval(() => {
-                currentProgress += Math.floor(Math.random() * 4) + 1;
-                if (currentProgress >= 100) {
-                    currentProgress = 100;
-                    clearInterval(timer);
+            // محاكاة العد التصاعدي للتروس من 0 إلى 100%
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 3) + 1;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
                 }
-                countValue.textContent = currentProgress;
+                updateCounter(progress);
             }, 70);
         };
     </script>
