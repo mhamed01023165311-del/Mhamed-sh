@@ -10,7 +10,6 @@
         :root {
             --bg-dark: #030305;
             --falcon-blue: #00d2ff;
-            --falcon-red: #ff003c;
         }
 
         * {
@@ -68,7 +67,7 @@
         }
 
         /* ==========================================================================
-           الأرقام الصافية فقط (بدون أي مستطيلات أو إطارات)
+           الأرقام الصافية بدون علامة المئوية وبدون خانة المئات الزائدة
            ========================================================================== */
         #gear-counter {
             display: flex;
@@ -80,7 +79,7 @@
             box-shadow: none;
         }
 
-        /* شباك عرض الرقم (مخفي ما يخرج عن الإطار لتأثير الحركة) */
+        /* شباك عرض الرقم */
         .digit-drum {
             position: relative;
             width: 34px;
@@ -89,6 +88,13 @@
             text-align: center;
             background: transparent;
             border: none;
+        }
+
+        /* خانة المئات (تظهر فقط عند 100%) */
+        #drum-hundreds {
+            width: 0px; /* مخفية تماماً في البداية */
+            overflow: hidden;
+            transition: width 0.3s ease;
         }
 
         /* شريط الأرقام المتحرك رأسياً */
@@ -112,14 +118,6 @@
             color: var(--falcon-blue);
             text-shadow: 0 0 12px rgba(0, 210, 255, 0.7);
         }
-
-        .percent-symbol {
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--falcon-red);
-            margin-left: 4px;
-            text-shadow: 0 0 12px rgba(255, 0, 60, 0.7);
-        }
     </style>
 </head>
 <body>
@@ -130,12 +128,12 @@
             <img src="icon/Word.png" alt="Falcon" class="notranslate" translate="no">
         </div>
 
-        <!-- الأرقام الميكانيكية الصافية بدون أي مربعات أو خلفيات -->
+        <!-- الأرقام الصافية بدون علامة مئوية وبدون صفر شمالي -->
         <div id="gear-counter">
-            <!-- خانة المئات -->
+            <!-- خانة المئات (تفتح تلقائياً عند 100) -->
             <div class="digit-drum" id="drum-hundreds">
                 <div class="drum-strip" style="transform: translateY(0px);">
-                    <div class="drum-num">0</div><div class="drum-num">1</div>
+                    <div class="drum-num">1</div>
                 </div>
             </div>
             <!-- خانة العشرات -->
@@ -150,31 +148,28 @@
                     <div class="drum-num">0</div><div class="drum-num">1</div><div class="drum-num">2</div><div class="drum-num">3</div><div class="drum-num">4</div><div class="drum-num">5</div><div class="drum-num">6</div><div class="drum-num">7</div><div class="drum-num">8</div><div class="drum-num">9</div>
                 </div>
             </div>
-            <span class="percent-symbol">%</span>
         </div>
     </div>
 
     <script>
         const falconContainer = document.getElementById('falcon-image-container');
         const gearCounter = document.getElementById('gear-counter');
+        const drumHundreds = document.getElementById('drum-hundreds');
 
-        const drumHundreds = document.querySelector('#drum-hundreds .drum-strip');
         const drumTens = document.querySelector('#drum-tens .drum-strip');
         const drumUnits = document.querySelector('#drum-units .drum-strip');
 
-        drumHundreds.innerHTML = '';
-        for (let i = 0; i <= 1; i++) {
-            drumHundreds.innerHTML += `<div class="drum-num">${i}</div>`;
-        }
-
         function updateCounter(val) {
-            let strVal = val.toString().padStart(3, '0');
-            
-            let h = parseInt(strVal[0]);
-            let t = parseInt(strVal[1]);
-            let u = parseInt(strVal[2]);
+            if (val >= 100) {
+                drumHundreds.style.width = '34px'; // إظهار خانة الـ 1 عند الوصول لـ 100%
+                val = 00; // عرض 00 بجانب الـ 1 لتصبح 100
+            }
 
-            drumHundreds.style.transform = `translateY(-${h * 48}px)`;
+            let strVal = val.toString().padStart(2, '0');
+            
+            let t = parseInt(strVal[0]);
+            let u = parseInt(strVal[1]);
+
             drumTens.style.transform = `translateY(-${t * 48}px)`;
             drumUnits.style.transform = `translateY(-${u * 48}px)`;
         }
@@ -188,7 +183,9 @@
                 progress += Math.floor(Math.random() * 3) + 1;
                 if (progress >= 100) {
                     progress = 100;
+                    updateCounter(100);
                     clearInterval(interval);
+                    return;
                 }
                 updateCounter(progress);
             }, 70);
