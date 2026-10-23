@@ -10,6 +10,7 @@
         :root {
             --bg-dark: #030305;
             --falcon-blue: #00d2ff;
+            --falcon-red: #ff003c;
         }
 
         * {
@@ -18,7 +19,7 @@
             box-sizing: border-box;
         }
 
-        /* إلغاء التمرير وثبات الشاشة تماماً */
+        /* إلغاء التمرير تماماً وثبات الشاشة */
         html, body {
             width: 100%;
             height: 100vh;
@@ -26,6 +27,7 @@
             overflow: hidden;
             position: fixed;
             touch-action: none;
+            font-family: 'Arial Black', Impact, sans-serif;
         }
 
         body {
@@ -33,71 +35,99 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-family: 'Arial Black', Impact, sans-serif;
+            perspective: 1000px;
         }
 
-        /* الحاوية العامة في منتصف الشاشة */
+        /* ==========================================================================
+           1. خلفية سرعة الضوء (تظهر عند اكتمال التحميل)
+           ========================================================================== */
+        #light-speed-bg {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            z-index: 5;
+            opacity: 0;
+            background-color: var(--bg-dark);
+            transform: rotate(-45deg);
+            pointer-events: none;
+        }
+
+        .streak {
+            position: absolute;
+            width: 150px;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--falcon-blue), transparent);
+            border-radius: 50%;
+            filter: blur(1px);
+            opacity: 0;
+        }
+
+        .streak.red {
+            background: linear-gradient(90deg, transparent, var(--falcon-red), transparent);
+            height: 6px;
+            filter: blur(2px);
+        }
+
+        /* ==========================================================================
+           2. شاشة التحميل (Preloader Layer)
+           ========================================================================== */
         #preloader {
             position: absolute;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
+            z-index: 100;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             gap: 25px;
+            background-color: var(--bg-dark);
         }
 
-        /* صورة كلمة فالكون */
-        #falcon-image-container {
+        /* صورة كلمة فالكون مع ضبط نقطة التركيز (Transform-origin) على حرف الـ O */
+        .preload-word {
             width: min(85vw, 480px);
             display: flex;
             justify-content: center;
             align-items: center;
             opacity: 0;
+            /* تحديد مركز حرف الـ O بدقة لكي يتم الزوم بداخله */
+            transform-origin: 77% 50%; 
         }
 
-        #falcon-image-container img {
+        .preload-word img {
             width: 100%;
             height: auto;
             object-fit: contain;
             filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.4));
         }
 
-        /* ==========================================================================
-           الأرقام الصافية بدون علامة المئوية وبدون خانة المئات الزائدة
-           ========================================================================== */
+        /* العداد الميكانيكي الصافي */
         #gear-counter {
             display: flex;
             align-items: center;
             gap: 2px;
             opacity: 0;
-            background: transparent;
-            border: none;
-            box-shadow: none;
         }
 
-        /* شباك عرض الرقم */
         .digit-drum {
             position: relative;
             width: 34px;
             height: 48px;
             overflow: hidden;
             text-align: center;
-            background: transparent;
-            border: none;
         }
 
-        /* خانة المئات (تظهر فقط عند 100%) */
         #drum-hundreds {
-            width: 0px; /* مخفية تماماً في البداية */
+            width: 0px;
             overflow: hidden;
             transition: width 0.3s ease;
         }
 
-        /* شريط الأرقام المتحرك رأسياً */
         .drum-strip {
             position: absolute;
             top: 0;
@@ -118,31 +148,128 @@
             color: var(--falcon-blue);
             text-shadow: 0 0 12px rgba(0, 210, 255, 0.7);
         }
+
+        /* ==========================================================================
+           3. الصفحة الرئيسية (Brand Identity مع فرس الخلفية بدقة)
+           ========================================================================== */
+        #main-page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 10;
+            opacity: 0;
+            visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* خلفية مفروشة بالكامل حسب حجم الشاشة وبدون أي تقطيع */
+            background-image: url('icon/1000017915_2.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .hero-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 1200px;
+            max-height: 800px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .hero-word {
+            position: absolute;
+            width: min(90vw, 750px);
+            z-index: 1;
+            filter: drop-shadow(0 0 25px rgba(0, 210, 255, 0.5));
+        }
+
+        .hero-word img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .hero-falcon {
+            position: absolute;
+            left: -5%;
+            bottom: -5%;
+            width: min(50vw, 450px);
+            z-index: 2;
+            filter: drop-shadow(0 0 20px rgba(255, 0, 60, 0.5));
+        }
+
+        .hero-falcon img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .hero-person {
+            position: absolute;
+            right: 5%;
+            bottom: 0%;
+            width: min(55vw, 480px);
+            z-index: 3;
+            filter: drop-shadow(0 0 25px rgba(0, 210, 255, 0.4));
+        }
+
+        .hero-person img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .hero-crown {
+            position: absolute;
+            right: 15%;
+            top: 25%;
+            width: min(12vw, 90px);
+            z-index: 4;
+            animation: floatCrown 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 0, 60, 0.8));
+        }
+
+        .hero-crown img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        @keyframes floatCrown {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(3deg); }
+        }
     </style>
 </head>
 <body>
 
+    <!-- خطوط سرعة الضوء -->
+    <div id="light-speed-bg"></div>
+
+    <!-- 1. شاشة التحميل -->
     <div id="preloader">
-        <!-- كلمة فالكون الشفافة -->
-        <div id="falcon-image-container">
+        <div class="preload-word" id="preloadWord">
             <img src="icon/Word.png" alt="Falcon" class="notranslate" translate="no">
         </div>
 
-        <!-- الأرقام الصافية بدون علامة مئوية وبدون صفر شمالي -->
         <div id="gear-counter">
-            <!-- خانة المئات (تفتح تلقائياً عند 100) -->
             <div class="digit-drum" id="drum-hundreds">
                 <div class="drum-strip" style="transform: translateY(0px);">
                     <div class="drum-num">1</div>
                 </div>
             </div>
-            <!-- خانة العشرات -->
             <div class="digit-drum" id="drum-tens">
                 <div class="drum-strip" style="transform: translateY(0px);">
                     <div class="drum-num">0</div><div class="drum-num">1</div><div class="drum-num">2</div><div class="drum-num">3</div><div class="drum-num">4</div><div class="drum-num">5</div><div class="drum-num">6</div><div class="drum-num">7</div><div class="drum-num">8</div><div class="drum-num">9</div>
                 </div>
             </div>
-            <!-- خانة الآحاد -->
             <div class="digit-drum" id="drum-units">
                 <div class="drum-strip" style="transform: translateY(0px);">
                     <div class="drum-num">0</div><div class="drum-num">1</div><div class="drum-num">2</div><div class="drum-num">3</div><div class="drum-num">4</div><div class="drum-num">5</div><div class="drum-num">6</div><div class="drum-num">7</div><div class="drum-num">8</div><div class="drum-num">9</div>
@@ -151,22 +278,54 @@
         </div>
     </div>
 
+    <!-- 2. الصفحة الرئيسية (Brand Identity) -->
+    <div id="main-page">
+        <div class="hero-container">
+            <div class="hero-word" id="heroWord">
+                <img src="icon/Word.png" alt="Falcon Word" class="notranslate" translate="no">
+            </div>
+            <div class="hero-falcon" id="heroFalcon">
+                <img src="icon/Falcon.png" alt="Falcon Mascot" class="notranslate" translate="no">
+            </div>
+            <div class="hero-person" id="heroPerson">
+                <img src="icon/person.png" alt="Person" class="notranslate" translate="no">
+            </div>
+            <div class="hero-crown" id="heroCrown">
+                <img src="icon/Crown.png" alt="Crown" class="notranslate" translate="no">
+            </div>
+        </div>
+    </div>
+
     <script>
-        const falconContainer = document.getElementById('falcon-image-container');
+        const preloadWord = document.getElementById('preloadWord');
         const gearCounter = document.getElementById('gear-counter');
         const drumHundreds = document.getElementById('drum-hundreds');
-
         const drumTens = document.querySelector('#drum-tens .drum-strip');
         const drumUnits = document.querySelector('#drum-units .drum-strip');
+        
+        const preloader = document.getElementById('preloader');
+        const mainPage = document.getElementById('main-page');
+        const lightSpeedBg = document.getElementById('light-speed-bg');
+
+        // توليد خطوط سرعة الضوء
+        function createStreaks() {
+            for(let i = 0; i < 80; i++) {
+                let streak = document.createElement('div');
+                streak.classList.add('streak');
+                if(Math.random() > 0.5) streak.classList.add('red');
+                streak.style.top = Math.random() * 100 + '%';
+                streak.style.left = '-20%'; 
+                lightSpeedBg.appendChild(streak);
+            }
+        }
+        createStreaks();
 
         function updateCounter(val) {
             if (val >= 100) {
-                drumHundreds.style.width = '34px'; // إظهار خانة الـ 1 عند الوصول لـ 100%
-                val = 00; // عرض 00 بجانب الـ 1 لتصبح 100
+                drumHundreds.style.width = '34px';
+                val = 00;
             }
-
             let strVal = val.toString().padStart(2, '0');
-            
             let t = parseInt(strVal[0]);
             let u = parseInt(strVal[1]);
 
@@ -175,7 +334,7 @@
         }
 
         window.onload = () => {
-            gsap.to(falconContainer, { opacity: 1, duration: 1, ease: "power2.out" });
+            gsap.to(preloadWord, { opacity: 1, duration: 1, ease: "power2.out" });
             gsap.to(gearCounter, { opacity: 1, duration: 0.8, delay: 0.3, ease: "power2.out" });
 
             let progress = 0;
@@ -185,11 +344,58 @@
                     progress = 100;
                     updateCounter(100);
                     clearInterval(interval);
+                    
+                    // تشغيل دخلة سرعة الضوء والزووم العنيف جوه حرف الـ O
+                    setTimeout(triggerHyperJump, 300);
                     return;
                 }
                 updateCounter(progress);
             }, 70);
         };
+
+        // دالة الانتقال بـ Hyper-Jump وسرعة الضوء
+        function triggerHyperJump() {
+            const tl = gsap.timeline({
+                onComplete: () => {
+                    preloader.style.display = 'none';
+                }
+            });
+
+            // إخفاء العداد بسرعة
+            tl.to(gearCounter, { opacity: 0, duration: 0.2 }, 0);
+
+            // إشعال خلفية خطوط سرعة الضوء
+            tl.to(lightSpeedBg, { opacity: 1, duration: 0.4 }, 0.1);
+
+            // زووم مرعب وعنيف جداً يدخل جوه حرف الـ O في كلمة FALCON
+            tl.to(preloadWord, {
+                scale: 80,
+                opacity: 0,
+                duration: 1.2,
+                ease: "power4.in"
+            }, 0.2);
+
+            // تحريك خطوط الإضاءة بسرعة البرق
+            const allStreaks = document.querySelectorAll('.streak');
+            allStreaks.forEach((streak) => {
+                gsap.to(streak, {
+                    x: window.innerWidth * 3,
+                    duration: Math.random() * 0.8 + 0.2,
+                    ease: "none",
+                    repeat: 2
+                });
+            });
+
+            // ظهور الصفحة الرئيسية وخلفيتها المفروشة باحترافية
+            mainPage.style.visibility = 'visible';
+            tl.to(mainPage, { opacity: 1, duration: 0.8, ease: "power2.out" }, 1.0);
+
+            // دخول مكونات الصفحة بـ Animation سينمائي
+            tl.from('#heroWord', { scale: 1.2, opacity: 0, duration: 1, ease: "power3.out" }, 1.1);
+            tl.from('#heroFalcon', { x: -120, opacity: 0, duration: 1, ease: "power3.out" }, 1.2);
+            tl.from('#heroPerson', { x: 120, opacity: 0, duration: 1, ease: "power3.out" }, 1.2);
+            tl.from('#heroCrown', { scale: 0, rotation: -90, opacity: 0, duration: 0.8, ease: "back.out(1.7)" }, 1.4);
+        }
     </script>
 </body>
 </html>
