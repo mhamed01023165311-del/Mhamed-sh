@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="google" content="notranslate">
     <title>Falcon | Sequence Initiation</title>
-    <!-- GSAP for smooth animations -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <!-- Lottie Player to render your exact download.json animation -->
-    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
     <style>
         :root {
             --bg-dark: #030305;
+            --primary: #070814;
+            --secondary: #00d2ff;
         }
 
         * {
@@ -20,7 +19,7 @@
             box-sizing: border-box;
         }
 
-        /* إلغاء التمرير تماماً وثبات الشاشة على جميع الأجهزة */
+        /* إلغاء السكرول تماماً وثبات الشاشة */
         html, body {
             width: 100%;
             height: 100vh;
@@ -37,7 +36,7 @@
             align-items: center;
         }
 
-        /* حاوية التحميل والتوسيط في المنتصف تماماً */
+        /* التوسيط الشامل للمشهد */
         #preloader {
             position: absolute;
             top: 0;
@@ -48,17 +47,16 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            gap: 25px;
         }
 
-        /* صورة كلمة FALCON المتجاوبة */
+        /* صورة كلمة فالكون */
         #falcon-image-container {
-            position: relative;
-            width: min(85vw, 480px);
+            width: min(85vw, 450px);
             display: flex;
             justify-content: center;
             align-items: center;
             opacity: 0;
-            margin-bottom: 20px;
         }
 
         #falcon-image-container img {
@@ -68,46 +66,97 @@
             filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.4));
         }
 
-        /* حاوية ملف الـ download.json (التقويم المتحرك والعداد 1-100) */
-        #lottie-container {
-            width: clamp(150px, 35vw, 220px);
-            height: clamp(150px, 35vw, 220px);
+        /* كارت التقويم المتحرك (مبني بـ SVG و CSS لنضمن عمله الفوري) */
+        .loader-card {
+            position: relative;
+            width: 130px;
+            height: 130px;
+            transform-origin: 50% 30%;
+            animation: wiggle 2.4s cubic-bezier(.45,0,.55,1) infinite;
             opacity: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        }
+
+        @keyframes wiggle{
+            0%  {transform:translateY(0) rotate(0deg)}
+            10% {transform:translateY(8px) rotate(-4deg)}
+            25% {transform:translateY(4px) rotate(-7deg)}
+            40% {transform:translateY(-8px) rotate(4deg)}
+            60% {transform:translateY(6px) rotate(2deg)}
+            100%{transform:translateY(0) rotate(0deg)}
+        }
+
+        .loader-card svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            overflow: visible;
+        }
+
+        /* العداد الرقمي داخل كارت التقويم */
+        .loader-number {
+            position: absolute;
+            left: 50%;
+            top: 65%;
+            transform: translate(-50%, -50%);
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--secondary);
+            font-family: 'Arial Black', sans-serif;
+            letter-spacing: -1px;
+        }
+        
+        .loader-number .pct {
+            font-size: 14px;
+            vertical-align: top;
+            margin-left: 2px;
         }
     </style>
 </head>
 <body>
 
     <div id="preloader">
-        <!-- صورة كلمة فالكون (Word.png) الشفافة والمفرغة -->
+        <!-- كلمة FALCON الشفافة -->
         <div id="falcon-image-container">
             <img src="icon/Word.png" alt="Falcon" class="notranslate" translate="no">
         </div>
 
-        <!-- كارت التقويم الحقيقي المتحرك (download.json) -->
-        <div id="lottie-container">
-            <lottie-player 
-                src="icon/download.json"
-                background="transparent" 
-                speed="1" 
-                style="width: 100%; height: 100%;" 
-                loop 
-                autoplay>
-            </lottie-player>
+        <!-- كارت التقويم المتحرك مع العداد التصاعدي -->
+        <div class="loader-card" id="loaderCard">
+            <svg viewBox="0 0 430 430" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <!-- حلقات التقويم فوق -->
+                <rect x="121.2" y="88.84" width="43.7" height="38.52" stroke="#00d2ff" stroke-width="12.4"/>
+                <rect x="335.1" y="88.84" width="43.7" height="38.52" stroke="#00d2ff" stroke-width="12.4"/>
+                <!-- شريط العنوان -->
+                <rect x="89" y="127.36" width="322" height="47.13" stroke="#00d2ff" stroke-width="12.4" fill="#0d1117"/>
+                <!-- جسم الكارت -->
+                <rect x="89" y="174.49" width="322" height="236.67" stroke="#00d2ff" stroke-width="12.4" fill="#0d1117"/>
+            </svg>
+            <div class="loader-number">
+                <span id="countValue">1</span><span class="pct">%</span>
+            </div>
         </div>
     </div>
 
     <script>
         const falconContainer = document.getElementById('falcon-image-container');
-        const lottieContainer = document.getElementById('lottie-container');
+        const loaderCard = document.getElementById('loaderCard');
+        const countValue = document.getElementById('countValue');
 
-        // ظهور ناعم واحترافي للعناصر عند فتح الصفحة
+        // ظهور ناعم للعناصر
         window.onload = () => {
             gsap.to(falconContainer, { opacity: 1, duration: 1, ease: "power2.out" });
-            gsap.to(lottieContainer, { opacity: 1, duration: 0.8, delay: 0.3, ease: "power2.out" });
+            gsap.to(loaderCard, { opacity: 1, duration: 0.8, delay: 0.3, ease: "power2.out" });
+
+            // عداد تصاعدي حقيقي من 1 إلى 100%
+            let currentProgress = 1;
+            const timer = setInterval(() => {
+                currentProgress += Math.floor(Math.random() * 4) + 1;
+                if (currentProgress >= 100) {
+                    currentProgress = 100;
+                    clearInterval(timer);
+                }
+                countValue.textContent = currentProgress;
+            }, 70);
         };
     </script>
 </body>
