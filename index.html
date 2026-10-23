@@ -48,7 +48,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 30px;
+            gap: 25px;
         }
 
         /* صورة كلمة فالكون */
@@ -68,33 +68,30 @@
         }
 
         /* ==========================================================================
-           عداد التروس الميكانيكي (Rolling Gears Counter)
+           الأرقام الصافية فقط (بدون أي مستطيلات أو إطارات)
            ========================================================================== */
         #gear-counter {
             display: flex;
             align-items: center;
-            gap: 4px;
-            background: rgba(10, 12, 20, 0.85);
-            padding: 12px 20px;
-            border-radius: 12px;
-            border: 2px solid rgba(0, 210, 255, 0.3);
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.15), inset 0 0 10px rgba(0, 0, 0, 0.8);
+            gap: 2px;
             opacity: 0;
+            background: transparent;
+            border: none;
+            box-shadow: none;
         }
 
-        /* شباك عرض الرقم (مخفي ما يخرج عن الإطار لتأثير التروس) */
+        /* شباك عرض الرقم (مخفي ما يخرج عن الإطار لتأثير الحركة) */
         .digit-drum {
             position: relative;
-            width: 38px;
-            height: 52px;
+            width: 34px;
+            height: 48px;
             overflow: hidden;
             text-align: center;
-            background: #05070d;
-            border-radius: 6px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: transparent;
+            border: none;
         }
 
-        /* شريط الأرقام اللي بيتحرك فوق وتحت */
+        /* شريط الأرقام المتحرك رأسياً */
         .drum-strip {
             position: absolute;
             top: 0;
@@ -106,22 +103,22 @@
         }
 
         .drum-num {
-            height: 52px;
+            height: 48px;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 34px;
+            font-size: 32px;
             font-weight: 900;
             color: var(--falcon-blue);
-            text-shadow: 0 0 10px rgba(0, 210, 255, 0.6);
+            text-shadow: 0 0 12px rgba(0, 210, 255, 0.7);
         }
 
         .percent-symbol {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 900;
             color: var(--falcon-red);
-            margin-left: 6px;
-            text-shadow: 0 0 10px rgba(255, 0, 60, 0.6);
+            margin-left: 4px;
+            text-shadow: 0 0 12px rgba(255, 0, 60, 0.7);
         }
     </style>
 </head>
@@ -133,7 +130,7 @@
             <img src="icon/Word.png" alt="Falcon" class="notranslate" translate="no">
         </div>
 
-        <!-- العداد الميكانيكي على شكل تروس (3 خانات: المئات، العشرات، الآحاد) -->
+        <!-- الأرقام الميكانيكية الصافية بدون أي مربعات أو خلفيات -->
         <div id="gear-counter">
             <!-- خانة المئات -->
             <div class="digit-drum" id="drum-hundreds">
@@ -165,31 +162,27 @@
         const drumTens = document.querySelector('#drum-tens .drum-strip');
         const drumUnits = document.querySelector('#drum-units .drum-strip');
 
-        // بناء شريط المئات ليحتوي من 0 إلى 1
         drumHundreds.innerHTML = '';
         for (let i = 0; i <= 1; i++) {
             drumHundreds.innerHTML += `<div class="drum-num">${i}</div>`;
         }
 
-        // تحديث حركة التروس بناءً على النسبة المئوية
         function updateCounter(val) {
-            let strVal = val.toString().padStart(3, '0'); // مثل: 005 أو 100
+            let strVal = val.toString().padStart(3, '0');
             
             let h = parseInt(strVal[0]);
             let t = parseInt(strVal[1]);
             let u = parseInt(strVal[2]);
 
-            drumHundreds.style.transform = `translateY(-${h * 52}px)`;
-            drumTens.style.transform = `translateY(-${t * 52}px)`;
-            drumUnits.style.transform = `translateY(-${u * 52}px)`;
+            drumHundreds.style.transform = `translateY(-${h * 48}px)`;
+            drumTens.style.transform = `translateY(-${t * 48}px)`;
+            drumUnits.style.transform = `translateY(-${u * 48}px)`;
         }
 
-        // ظهور ناعم عند فتح الصفحة
         window.onload = () => {
             gsap.to(falconContainer, { opacity: 1, duration: 1, ease: "power2.out" });
             gsap.to(gearCounter, { opacity: 1, duration: 0.8, delay: 0.3, ease: "power2.out" });
 
-            // محاكاة العد التصاعدي للتروس من 0 إلى 100%
             let progress = 0;
             const interval = setInterval(() => {
                 progress += Math.floor(Math.random() * 3) + 1;
