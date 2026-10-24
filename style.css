@@ -145,7 +145,9 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url('icon/1000017915_2.png');
+    
+    /* ركز هنا: ده اسم ملف الخلفية الطويل اللي في جيت هوب عندك */
+    background-image: url('icon/file_000C000091d881f5e3c67dac14addeb0.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
