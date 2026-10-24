@@ -58,9 +58,11 @@ function triggerHyperJump() {
         }
     });
 
+    // إخفاء العداد وتشغيل سرعة الضوء
     tl.to(gearCounter, { opacity: 0, duration: 0.2 }, 0);
     tl.to(lightSpeedBg, { opacity: 1, duration: 0.4 }, 0.1);
 
+    // زووم التحميل
     tl.to(preloadWord, {
         scale: 80,
         opacity: 0,
@@ -78,25 +80,43 @@ function triggerHyperJump() {
         });
     });
 
+    // ظهور الصفحة الرئيسية
     mainPage.style.visibility = 'visible';
     tl.to(mainPage, { opacity: 1, duration: 0.8, ease: "power2.out" }, 1.0);
 
     // الشخص والتاج يدخلان معاً من اليسار
     tl.from('#characterGroup', { x: -300, opacity: 0, duration: 1.2, ease: "power3.out" }, 1.2);
     
-    // الصقر يطير ببطء من أقصى الشمال ويستقر في اليمين خلف الشخص
-    tl.fromTo('#falconGroup', 
-        { x: -window.innerWidth, y: 50, opacity: 0 }, 
-        { x: 0, y: 0, opacity: 1, duration: 2.8, ease: "power1.out" }, 
-    1.0);
+    // =========================================================================
+    // أنيميشن الصقر والكلمة (يبدأ بعد ثانيتين من فتح الصفحة)
+    // =========================================================================
+    
+    // إخفاء الصقر والكلمة وتجهيزهم للأنيميشن
+    gsap.set('#falconGroup', { x: -window.innerWidth, y: 50, opacity: 0 });
+    gsap.set('#heroWordMain', { opacity: 0, x: -30, filter: "blur(5px)" });
 
-    // حركة طفو الصقر في الهواء
-    gsap.to('#falconGroup', {
+    const falconTimeline = gsap.timeline({ delay: 3.5 }); // 1.5 (وقت الدخلة) + 2 ثانية انتظار = 3.5
+
+    // 1. الصقر يطير من الشمال لليمين
+    falconTimeline.to('#falconGroup', { 
+        x: 0, y: 0, opacity: 1, duration: 2.5, ease: "power2.out" 
+    }, 0);
+
+    // 2. الكلمة تظهر بالتدريج (Smooth) عندما يمر الصقر من فوقها (بعد 1 ثانية من بدء طيران الصقر)
+    falconTimeline.to('#heroWordMain', {
+        opacity: 1, 
+        x: 0, 
+        filter: "blur(0px)", 
+        duration: 1.5, 
+        ease: "power2.out"
+    }, 1.0);
+
+    // 3. حركة طفو الصقر في الهواء بعد ما يستقر
+    falconTimeline.to('#falconGroup', {
         y: -15,
         duration: 2,
         ease: "sine.inOut",
         repeat: -1,
-        yoyo: true,
-        delay: 3.8
-    });
+        yoyo: true
+    }, 2.5);
 }
