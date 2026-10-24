@@ -28,7 +28,6 @@ body {
     perspective: 1000px;
 }
 
-/* خلفية سرعة الضوء */
 #light-speed-bg {
     position: absolute;
     top: -50%;
@@ -58,7 +57,6 @@ body {
     filter: blur(2px);
 }
 
-/* شاشة التحميل والعداد */
 #preloader {
     position: absolute;
     top: 0;
@@ -87,7 +85,6 @@ body {
     width: 100%;
     height: auto;
     object-fit: contain;
-    filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.4));
 }
 
 #gear-counter {
@@ -132,7 +129,7 @@ body {
     text-shadow: 0 0 12px rgba(0, 210, 255, 0.7);
 }
 
-/* الصفحة الرئيسية */
+/* الصفحة الرئيسية بالخلفية الأصلية بتاعتك */
 #main-page {
     position: absolute;
     top: 0;
@@ -145,9 +142,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    
-    /* ركز هنا: ده اسم ملف الخلفية الطويل اللي في جيت هوب عندك */
-    background-image: url('icon/file_000C000091d881f5e3c67dac14addeb0.png');
+    background-image: url('icon/File_0000000091d881f5a3c67dac14addeb0.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -165,31 +160,12 @@ body {
     overflow: hidden;
 }
 
-.hero-word {
-    position: absolute;
-    top: 15%;
-    width: min(90vw, 650px);
-    z-index: 1;
-    text-align: center;
-    font-size: clamp(2.5rem, 7vw, 5.5rem);
-    font-weight: 900;
-    text-transform: uppercase;
-    color: transparent;
-    background-image: url('icon/Word.png');
-    background-size: cover;
-    background-position: center;
-    -webkit-background-clip: text;
-    background-clip: text;
-    filter: drop-shadow(0 0 20px rgba(0, 210, 255, 0.6));
-}
-
 .hero-person {
     position: absolute;
-    left: 8%;
-    bottom: 0%;
-    width: min(45vw, 400px);
+    left: -5%;
+    bottom: -5%;
+    width: min(90vw, 650px);
     z-index: 3;
-    filter: drop-shadow(0 0 25px rgba(0, 210, 255, 0.4));
 }
 
 .hero-person img {
@@ -200,12 +176,11 @@ body {
 
 .hero-crown {
     position: absolute;
-    left: 28%;
-    top: 48%;
-    width: min(10vw, 70px);
+    left: 16%;
+    top: 15%;
+    width: min(25vw, 120px);
     z-index: 4;
-    transform: rotate(12deg);
-    filter: drop-shadow(0 0 10px rgba(255, 0, 60, 0.9));
+    transform: rotate(15deg);
 }
 
 .hero-crown img {
@@ -217,10 +192,9 @@ body {
 .hero-flying-falcon {
     position: absolute;
     right: 5%;
-    top: 30%;
-    width: min(45vw, 420px);
+    top: 25%;
+    width: min(55vw, 450px);
     z-index: 2;
-    filter: drop-shadow(0 0 20px rgba(255, 0, 60, 0.6));
 }
 
 .hero-flying-falcon img {
