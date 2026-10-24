@@ -81,13 +81,22 @@ function triggerHyperJump() {
     mainPage.style.visibility = 'visible';
     tl.to(mainPage, { opacity: 1, duration: 0.8, ease: "power2.out" }, 1.0);
 
-    // أنيميشن دخول الشخص والتاج
-    tl.from('#heroPerson', { x: -200, opacity: 0, duration: 1.2, ease: "power3.out" }, 1.1);
-    tl.from('#heroCrown', { y: -50, scale: 0.5, opacity: 0, duration: 1, ease: "back.out(1.5)" }, 1.3);
+    // الشخص والتاج يدخلان معاً من اليسار
+    tl.from('#characterGroup', { x: -300, opacity: 0, duration: 1.2, ease: "power3.out" }, 1.2);
     
-    // أنيميشن الصقر الطائر من الشمال لليمين
-    tl.fromTo('#heroFlyingFalcon', 
-        { x: -350, y: 60, opacity: 0 }, 
-        { x: 0, y: 0, opacity: 1, duration: 2, ease: "power2.out" }, 
-    1.1);
+    // الصقر يطير من أقصى الشمال (عرض الشاشة بالكامل) ويمشي لليمين حيث هو باصص ببطء
+    tl.fromTo('#falconGroup', 
+        { x: -window.innerWidth, y: 50, opacity: 0 }, 
+        { x: 0, y: 0, opacity: 1, duration: 2.8, ease: "power1.out" }, 
+    1.0);
+
+    // حركة طفو مستمرة للصقر في الهواء بعد وصوله
+    gsap.to('#falconGroup', {
+        y: -20,
+        duration: 2,
+        ease: "sine.inOut",
+        repeat: -1,
+        yoyo: true,
+        delay: 3.8
+    });
 }
