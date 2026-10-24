@@ -130,7 +130,7 @@ body {
 }
 
 /* ==========================================================================
-   الصفحة الرئيسية والخلفية
+   الصفحة الرئيسية (الخلفية مبرمجة بأكواد CSS نقية 100%)
    ========================================================================== */
 #main-page {
     position: absolute;
@@ -141,11 +141,54 @@ body {
     z-index: 10;
     opacity: 0;
     visibility: hidden;
-    /* مسار الخلفية */
-    background-image: url('icon/File_0000000091d881f5a3c67dac14addeb0.png');
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* الأساس المظلم للخلفية */
+    background-color: #020306;
+    
+    /* محاكاة الخطوط المائلة باللونين الأحمر والأزرق النيون */
+    background-image: 
+        /* تظليل أسود دائري لدمج الأطراف وإبراز الشخص */
+        radial-gradient(circle at center, transparent 20%, #010103 95%),
+        
+        /* خطوط الفرشاة الحمراء البارزة */
+        repeating-linear-gradient(55deg, 
+            transparent, 
+            transparent 8%, 
+            rgba(255, 0, 60, 0.6) 8.3%, 
+            rgba(255, 0, 60, 0.15) 8.8%, 
+            transparent 9%, 
+            transparent 25%,
+            rgba(255, 0, 60, 0.4) 25.2%,
+            transparent 25.5%,
+            transparent 100%),
+            
+        /* خطوط الفرشاة الزرقاء البارزة */
+        repeating-linear-gradient(55deg, 
+            transparent, 
+            transparent 15%, 
+            rgba(0, 210, 255, 0.7) 15.3%, 
+            rgba(0, 210, 255, 0.2) 15.8%, 
+            transparent 16%, 
+            transparent 45%,
+            rgba(0, 210, 255, 0.5) 45.2%,
+            transparent 45.6%,
+            transparent 100%),
+            
+        /* خدوش وخطوط رفيعة (Scratches) واقعية جداً */
+        repeating-linear-gradient(55deg, 
+            transparent, 
+            transparent 35%, 
+            rgba(255, 0, 60, 0.3) 35.1%, 
+            transparent 35.2%, 
+            transparent 60%, 
+            rgba(0, 210, 255, 0.4) 60.1%, 
+            transparent 60.3%, 
+            transparent 100%);
+            
     background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
 }
 
 .hero-container {
@@ -157,45 +200,70 @@ body {
 }
 
 /* ==========================================================================
-   تظبيط مقاس ومكان الشخص والتاج
+   الشخص والتاج (في الشمال)
    ========================================================================== */
 .character-group {
     position: absolute;
-    bottom: 5vh; /* رفعناه لفوق عشان الكوتشي يبان بالكامل */
-    left: 2vw;   /* نقلناه للشمال */
-    height: 70vh; /* صغرنا حجمه شوية زي ما طلبت */
+    bottom: -2vh; 
+    left: 2vw; 
+    height: 85vh; 
+    width: 45vw;  
     z-index: 3;
 }
 
 .person-img {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
-    width: auto;
-    display: block;
+    object-fit: contain;
+    object-position: bottom center;
 }
 
 .crown-img {
     position: absolute;
-    /* الأرقام دي بتتحكم في مكان التاج فوق الراس، تقدر تعدلها لو حبيت */
-    top: 6%; 
-    left: 42%; 
-    width: 30%; /* كبرنا التاج جداً ليكون بحجم ملصق واضح */
-    transform: rotate(15deg); /* ميلان بسيط */
+    top: 5%;      
+    left: 50%;    
+    width: 32%;   
+    transform: translate(-50%, 0) rotate(15deg); 
     z-index: 4;
 }
 
 /* ==========================================================================
-   الصقر
+   الصقر 
    ========================================================================== */
 .falcon-group {
     position: absolute;
     top: 15vh;
-    right: 5vw; /* يقف على اليمين في النهاية */
-    height: 50vh;
-    z-index: 2;
+    right: 2vw; 
+    height: 70vh; 
+    width: 60vw;
+    z-index: 4; 
 }
 
 .falcon-img {
+    width: 100%;
     height: 100%;
-    width: auto;
-    display: block;
+    object-fit: contain;
+    object-position: center right;
+}
+
+/* ==========================================================================
+   الكلمة المخفية
+   ========================================================================== */
+.hero-word-main {
+    position: absolute;
+    top: 35%;
+    right: 8%;
+    width: 45vw;
+    z-index: 2; 
+    opacity: 0; 
+}
+
+.hero-word-main img {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 0 15px rgba(0, 210, 255, 0.3));
 }
