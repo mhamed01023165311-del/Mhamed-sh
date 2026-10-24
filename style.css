@@ -141,9 +141,7 @@ body {
     z-index: 10;
     opacity: 0;
     visibility: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    /* مسار الخلفية */
     background-image: url('icon/File_0000000091d881f5a3c67dac14addeb0.png');
     background-size: cover;
     background-position: center;
@@ -154,57 +152,50 @@ body {
     position: relative;
     width: 100%;
     height: 100%;
+    max-width: 1400px;
     overflow: hidden;
 }
 
 /* ==========================================================================
-   حل مشكلة الأبعاد (صندوق الشخص والتاج معاً)
+   تظبيط مقاس ومكان الشخص والتاج
    ========================================================================== */
 .character-group {
     position: absolute;
-    bottom: -2%;
-    left: -5%; 
-    height: 85vh; 
-    width: 85vh; /* تحويل الصندوق لمربع لكي تعمل النسب المئوية كأنها بيكسلات ثابتة */
+    bottom: 5vh; /* رفعناه لفوق عشان الكوتشي يبان بالكامل */
+    left: 2vw;   /* نقلناه للشمال */
+    height: 70vh; /* صغرنا حجمه شوية زي ما طلبت */
     z-index: 3;
 }
 
-/* الشخص مثبت داخل الصندوق في الأسفل يساراً */
 .person-img {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
     height: 100%;
-    object-fit: contain;
-    object-position: bottom left; 
+    width: auto;
+    display: block;
 }
 
-/* التاج مربوط بالصندوق: يمكنك تعديل الأرقام دي بسهولة لضبط مكانه الدقيق */
 .crown-img {
     position: absolute;
-    top: 15%;      /* البعد عن أعلى الصندوق */
-    left: 36%;     /* البعد عن شمال الصندوق (فوق الرأس) */
-    width: 14%;    /* حجم التاج */
-    transform: rotate(12deg); /* ميلان بسيط */
+    /* الأرقام دي بتتحكم في مكان التاج فوق الراس، تقدر تعدلها لو حبيت */
+    top: 6%; 
+    left: 42%; 
+    width: 30%; /* كبرنا التاج جداً ليكون بحجم ملصق واضح */
+    transform: rotate(15deg); /* ميلان بسيط */
     z-index: 4;
 }
 
 /* ==========================================================================
-   مجموعة الصقر
+   الصقر
    ========================================================================== */
 .falcon-group {
     position: absolute;
-    top: 15%;
-    right: 0%;
-    height: 55vh;
-    width: 55vh;
+    top: 15vh;
+    right: 5vw; /* يقف على اليمين في النهاية */
+    height: 50vh;
     z-index: 2;
 }
 
 .falcon-img {
-    width: 100%;
     height: 100%;
-    object-fit: contain;
-    object-position: center right;
+    width: auto;
+    display: block;
 }
