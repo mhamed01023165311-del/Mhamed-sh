@@ -8,7 +8,6 @@ const preloader = document.getElementById('preloader');
 const mainPage = document.getElementById('main-page');
 const lightSpeedBg = document.getElementById('light-speed-bg');
 
-// توليد خطوط سرعة الضوء
 function createStreaks() {
     for(let i = 0; i < 80; i++) {
         let streak = document.createElement('div');
@@ -21,7 +20,6 @@ function createStreaks() {
 }
 createStreaks();
 
-// تحديث العداد الميكانيكي
 function updateCounter(val) {
     if (val >= 100) {
         drumHundreds.style.width = '34px';
@@ -35,7 +33,6 @@ function updateCounter(val) {
     drumUnits.style.transform = `translateY(-${u * 48}px)`;
 }
 
-// بدء التشغيل
 window.onload = () => {
     gsap.to(preloadWord, { opacity: 1, duration: 1, ease: "power2.out" });
     gsap.to(gearCounter, { opacity: 1, duration: 0.8, delay: 0.3, ease: "power2.out" });
@@ -54,7 +51,6 @@ window.onload = () => {
     }, 70);
 };
 
-// انتقال الـ Hyper-Jump
 function triggerHyperJump() {
     const tl = gsap.timeline({
         onComplete: () => {
@@ -85,13 +81,13 @@ function triggerHyperJump() {
     mainPage.style.visibility = 'visible';
     tl.to(mainPage, { opacity: 1, duration: 0.8, ease: "power2.out" }, 1.0);
 
-    // أنيميشن دخول عناصر الصفحة الرئيسية
-    tl.from('#heroWord', { scale: 1.2, opacity: 0, duration: 1, ease: "power3.out" }, 1.1);
-    tl.from('#heroPerson', { x: -150, opacity: 0, duration: 1, ease: "power3.out" }, 1.2);
-    tl.from('#heroCrown', { y: -30, scale: 0.5, opacity: 0, duration: 0.8, ease: "back.out(1.7)" }, 1.4);
+    // أنيميشن دخول الشخص والتاج
+    tl.from('#heroPerson', { x: -200, opacity: 0, duration: 1.2, ease: "power3.out" }, 1.1);
+    tl.from('#heroCrown', { y: -50, scale: 0.5, opacity: 0, duration: 1, ease: "back.out(1.5)" }, 1.3);
     
+    // أنيميشن الصقر الطائر من الشمال لليمين
     tl.fromTo('#heroFlyingFalcon', 
-        { x: -300, y: 50, opacity: 0 }, 
-        { x: 0, y: 0, opacity: 1, duration: 1.8, ease: "power1.out" }, 
-    1.2);
+        { x: -350, y: 60, opacity: 0 }, 
+        { x: 0, y: 0, opacity: 1, duration: 2, ease: "power2.out" }, 
+    1.1);
 }
