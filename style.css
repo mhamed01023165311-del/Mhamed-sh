@@ -129,7 +129,9 @@ body {
     text-shadow: 0 0 12px rgba(0, 210, 255, 0.7);
 }
 
-/* الصفحة الرئيسية بالخلفية الأصلية بتاعتك */
+/* ==========================================================================
+   الصفحة الرئيسية
+   ========================================================================== */
 #main-page {
     position: absolute;
     top: 0;
@@ -142,7 +144,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url('icon/File_0000000091d881f5a3c67dac14addeb0.png');
+    /* اسم الخلفية كما هو مسجل بالمللي في مستودع جيت هوب الخاص بك */
+    background-image: url('icon/file_000C000091d881f5e3c67dac14addeb0.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -152,33 +155,34 @@ body {
     position: relative;
     width: 100%;
     height: 100%;
-    max-width: 1200px;
-    max-height: 800px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    max-width: 1400px;
     overflow: hidden;
 }
 
+/* 1. الشخص (مثبت أسفل اليسار بحجم ضخم) */
 .hero-person {
     position: absolute;
-    left: -5%;
-    bottom: -5%;
-    width: min(90vw, 650px);
+    left: 0%;
+    bottom: 0%;
+    height: 85vh; /* الارتفاع يضمن ظهوره بحجم كبير مهما كانت المساحة الشفافة */
+    width: 50vw;
     z-index: 3;
 }
 
 .hero-person img {
     width: 100%;
-    height: auto;
+    height: 100%;
     object-fit: contain;
+    object-position: bottom left; /* لتثبيت الشخص أسفل يسار الشاشة */
 }
 
+/* 2. التاج (أكبر ومرفوع ومائل فوق الرأس) */
 .hero-crown {
     position: absolute;
-    left: 16%;
-    top: 15%;
-    width: min(25vw, 120px);
+    left: 14%; /* محاذاة مع رأس الشخص */
+    top: 10%; /* فوق الرأس */
+    width: 15vw;
+    min-width: 90px;
     z-index: 4;
     transform: rotate(15deg);
 }
@@ -189,16 +193,19 @@ body {
     object-fit: contain;
 }
 
+/* 3. الصقر (مثبت على اليمين بحجم متناسق) */
 .hero-flying-falcon {
     position: absolute;
-    right: 5%;
-    top: 25%;
-    width: min(55vw, 450px);
+    right: 0%;
+    top: 15%;
+    height: 60vh;
+    width: 50vw;
     z-index: 2;
 }
 
 .hero-flying-falcon img {
     width: 100%;
-    height: auto;
+    height: 100%;
     object-fit: contain;
+    object-position: center right; /* لتثبيت الصقر في يمين الشاشة */
 }
