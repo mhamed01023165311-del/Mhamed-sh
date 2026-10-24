@@ -130,7 +130,7 @@ body {
 }
 
 /* ==========================================================================
-   الصفحة الرئيسية
+   الصفحة الرئيسية والخلفية
    ========================================================================== */
 #main-page {
     position: absolute;
@@ -144,8 +144,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* اسم الخلفية كما هو مسجل بالمللي في مستودع جيت هوب الخاص بك */
-    background-image: url('icon/file_000C000091d881f5e3c67dac14addeb0.png');
+    background-image: url('icon/File_0000000091d881f5a3c67dac14addeb0.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -155,57 +154,57 @@ body {
     position: relative;
     width: 100%;
     height: 100%;
-    max-width: 1400px;
     overflow: hidden;
 }
 
-/* 1. الشخص (مثبت أسفل اليسار بحجم ضخم) */
-.hero-person {
+/* ==========================================================================
+   حل مشكلة الأبعاد (صندوق الشخص والتاج معاً)
+   ========================================================================== */
+.character-group {
     position: absolute;
-    left: 0%;
-    bottom: 0%;
-    height: 85vh; /* الارتفاع يضمن ظهوره بحجم كبير مهما كانت المساحة الشفافة */
-    width: 50vw;
+    bottom: -2%;
+    left: -5%; 
+    height: 85vh; 
+    width: 85vh; /* تحويل الصندوق لمربع لكي تعمل النسب المئوية كأنها بيكسلات ثابتة */
     z-index: 3;
 }
 
-.hero-person img {
+/* الشخص مثبت داخل الصندوق في الأسفل يساراً */
+.person-img {
+    position: absolute;
+    bottom: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: contain;
-    object-position: bottom left; /* لتثبيت الشخص أسفل يسار الشاشة */
+    object-position: bottom left; 
 }
 
-/* 2. التاج (أكبر ومرفوع ومائل فوق الرأس) */
-.hero-crown {
+/* التاج مربوط بالصندوق: يمكنك تعديل الأرقام دي بسهولة لضبط مكانه الدقيق */
+.crown-img {
     position: absolute;
-    left: 14%; /* محاذاة مع رأس الشخص */
-    top: 10%; /* فوق الرأس */
-    width: 15vw;
-    min-width: 90px;
+    top: 15%;      /* البعد عن أعلى الصندوق */
+    left: 36%;     /* البعد عن شمال الصندوق (فوق الرأس) */
+    width: 14%;    /* حجم التاج */
+    transform: rotate(12deg); /* ميلان بسيط */
     z-index: 4;
-    transform: rotate(15deg);
 }
 
-.hero-crown img {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-}
-
-/* 3. الصقر (مثبت على اليمين بحجم متناسق) */
-.hero-flying-falcon {
+/* ==========================================================================
+   مجموعة الصقر
+   ========================================================================== */
+.falcon-group {
     position: absolute;
-    right: 0%;
     top: 15%;
-    height: 60vh;
-    width: 50vw;
+    right: 0%;
+    height: 55vh;
+    width: 55vh;
     z-index: 2;
 }
 
-.hero-flying-falcon img {
+.falcon-img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-    object-position: center right; /* لتثبيت الصقر في يمين الشاشة */
+    object-position: center right;
 }
