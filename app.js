@@ -84,15 +84,15 @@ function triggerHyperJump() {
     // الشخص والتاج يدخلان معاً من اليسار
     tl.from('#characterGroup', { x: -300, opacity: 0, duration: 1.2, ease: "power3.out" }, 1.2);
     
-    // الصقر يطير من أقصى الشمال (عرض الشاشة بالكامل) ويمشي لليمين حيث هو باصص ببطء
+    // الصقر يطير ببطء من أقصى الشمال ويستقر في اليمين خلف الشخص
     tl.fromTo('#falconGroup', 
         { x: -window.innerWidth, y: 50, opacity: 0 }, 
         { x: 0, y: 0, opacity: 1, duration: 2.8, ease: "power1.out" }, 
     1.0);
 
-    // حركة طفو مستمرة للصقر في الهواء بعد وصوله
+    // حركة طفو الصقر في الهواء
     gsap.to('#falconGroup', {
-        y: -20,
+        y: -15,
         duration: 2,
         ease: "sine.inOut",
         repeat: -1,
